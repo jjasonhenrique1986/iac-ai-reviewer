@@ -51,17 +51,31 @@ aws iam put-role-policy \
 O `sub` da trust policy é `repo:meu-usuario/meu-repo:pull_request`, ou seja, só
 workflows disparados por pull requests desse repositório assumem a role.
 
-### 3. Variáveis do repositório
+> **Confira o formato do `sub` no seu repositório.** Se o repositório usa o
+> *subject imutável*, o `sub` inclui os IDs numéricos do dono e do repositório,
+> como `repo:meu-usuario@123456/meu-repo@7891011:pull_request`, e a trust
+> policy acima recusa o token (`Not authorized to perform
+> sts:AssumeRoleWithWebIdentity`). Para ver o prefixo que o GitHub usa:
+>
+> ```bash
+> gh api repos/meu-usuario/meu-repo/actions/oidc/customization/sub --jq .sub_claim_prefix
+> ```
+>
+> Na trust policy, use esse prefixo seguido de `:pull_request`.
 
-Em **Settings → Secrets and variables → Actions → Variables**:
+### 3. Secret e variáveis do repositório
 
-| Variável | Obrigatória | Exemplo |
-|---|---|---|
-| `AWS_ROLE_ARN` | sim | `arn:aws:iam::111122223333:role/github-iac-ai-reviewer` |
-| `AWS_REGION` | não (padrão `us-east-1`) | `us-east-1` |
-| `MODEL_ID` | não (padrão `anthropic.claude-opus-5-5`) | `anthropic.claude-sonnet-5-5` |
+Em **Settings → Secrets and variables → Actions**:
 
-Não há nenhum secret: a autenticação é toda por OIDC.
+| Nome | Tipo | Obrigatório | Exemplo |
+|---|---|---|---|
+| `AWS_ROLE_ARN` | Secret | sim | `arn:aws:iam::111122223333:role/github-iac-ai-reviewer` |
+| `AWS_REGION` | Variable | não (padrão `us-east-1`) | `us-east-1` |
+| `MODEL_ID` | Variable | não (padrão `anthropic.claude-opus-5-5`) | `anthropic.claude-sonnet-5-5` |
+
+A autenticação é toda por OIDC, sem access keys. O ARN da role não é uma
+credencial: ele fica como secret só para o ID da conta não aparecer no
+repositório nem nos logs.
 
 ## Rodando localmente
 
