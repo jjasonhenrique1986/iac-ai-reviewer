@@ -6,6 +6,15 @@
       "Effect": "Allow",
       "Action": "bedrock-mantle:CreateInference",
       "Resource": "arn:aws:bedrock-mantle:*:111122223333:project/*"
+    },
+    {
+      "Sid": "GptOss",
+      "Effect": "Allow",
+      "Action": "bedrock:InvokeModel",
+      "Resource": [
+        "arn:aws:bedrock:*::foundation-model/openai.gpt-oss-120b-1:0",
+        "arn:aws:bedrock:*::foundation-model/openai.gpt-oss-20b-1:0"
+      ]
     }
   ]
 }

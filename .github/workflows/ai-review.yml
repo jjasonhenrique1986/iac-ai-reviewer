@@ -45,7 +45,7 @@ jobs:
           mask-aws-account-id: true
           aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
 
-      - name: Revisar com o Claude
+      - name: Revisar com IA
         env:
           MODEL_ID: ${{ vars.MODEL_ID }}
         run: python reviewer/review.py --base origin/${{ github.base_ref }} --checkov checkov.txt --output review.md
